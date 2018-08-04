@@ -32,7 +32,7 @@ function loadWhiteList()
 			for i=1, #result, 1 do
 				table.insert(WhiteList, {
 					identifier		= result[i].identifier,
-					last_connection	= result[i].last_connexion,
+					last_connection	= result[i].last_connection,
 					ban_reason		= result[i].ban_reason,
 					ban_until		= result[i].ban_until,
 					vip				= result[i].vip == 1
@@ -64,7 +64,7 @@ AddEventHandler('playerDropped', function(reason)
 			ESX.Trace("WHITELIST: " .. _U("log_added_to_priority_queue", playerName, steamID))
 		end
 
-		local timeToWait = 2
+		local timeToWait = 30
 		currentPriorityTime = currentPriorityTime + timeToWait
 
 		for i=0,timeToWait, 1 do
@@ -115,7 +115,7 @@ AddEventHandler("playerConnecting", function(playerName, reason, deferrals)
 	for i=1, #WhiteList, 1 do
 		if WhiteList[i].identifier == steamID then
 			found = true
-			if WhiteList[i].ban_until ~= nil and WhiteList[i].ban_until > timestamp then
+			if WhiteList[i].ban_until ~= nil and WhiteList[i].ban_until > timestamp*1000 then
 				reason(_U("banned_from_server"))
 				deferrals.done(_U("banned_from_server"))
 				CancelEvent()
@@ -171,7 +171,7 @@ AddEventHandler("playerConnecting", function(playerName, reason, deferrals)
 					local isIn = false
 
 					for _,k in pairs(PriorityList) do
-						if k == steamid then
+						if k == steamID then
 							isIn = true
 							break
 						end
@@ -194,7 +194,7 @@ AddEventHandler("playerConnecting", function(playerName, reason, deferrals)
 			end
 		end
 	else
-		if(Vip) then
+		if(isVip) then
 			ESX.Trace("WHITELIST: " .. _U("log_player_connected_as_vip", playerName))
 		end
 
@@ -210,8 +210,8 @@ AddEventHandler("playerConnecting", function(playerName, reason, deferrals)
 			end
 			ESX.Trace("WHITELIST: " .. _U("log_stopped_anti_spam", playerName))
 
-			deferrals.done() -- connect
 		end
+		deferrals.done() -- connect
 	end
 end)
 
