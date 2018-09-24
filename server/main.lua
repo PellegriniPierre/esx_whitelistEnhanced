@@ -273,9 +273,12 @@ AddEventHandler('esx_whitelistExtended:whitelistUser', function(source, identifi
 		if result[1] ~= nil then
 			TriggerEvent('esx_whitelistExtended:sendMessage', source, '^1SYSTEM', 'The player is already whitelisted on this server!')
 		else
-			MySQL.Async.execute("INSERT INTO whitelist (identifier) VALUES (@identifier)", {['@identifier'] = identifier})
-			TriggerEvent('esx_whitelistExtended:sendMessage', source, 'Whitelist', 'The player has been whitelisted! Identifier: ' .. identifier)
-			loadWhiteList()
+			MySQL.Async.execute("INSERT INTO whitelist (identifier) VALUES (@identifier)", {
+				['@identifier'] = identifier
+			}, function(rowsChanged)
+				TriggerEvent('esx_whitelistExtended:sendMessage', source, 'Whitelist', 'The player has been whitelisted! Identifier: ' .. identifier)
+				loadWhiteList()
+			end)
 		end
 	end)
 end)
