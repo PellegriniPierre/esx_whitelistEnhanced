@@ -9,20 +9,9 @@ local playersWaiting = {}
 local onlinePlayers = 0
 local inConnection = {}
 local allowConnecting = false
-local hasSqlRun = false
 
-AddEventHandler('onMySQLReady', function()
-	hasSqlRun = true
+MySQL.ready(function()
 	loadWhiteList()
-end)
-
--- extremely useful when restarting script mid-game
-Citizen.CreateThread(function()
-	Citizen.Wait(15000) -- hopefully enough for connection to the SQL server
-
-	if not hasSqlRun then
-		loadWhiteList()
-	end
 end)
 
 function loadWhiteList()
@@ -312,11 +301,12 @@ function stringsplit(inputstr, sep)
 	if sep == nil then
 		sep = "%s"
 	end
-	local t = {}
-	local i = 1
+
+	local t, i = {}, 1
 	for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
 		t[i] = str
 		i = i + 1
 	end
+
 	return t
 end
