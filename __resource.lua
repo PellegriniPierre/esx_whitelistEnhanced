@@ -10,6 +10,7 @@ server_scripts {
 	'locales/en.lua',
 	'locales/fi.lua',
 	'locales/fr.lua',
+	'locales/it.lua',
 	'config.lua',
 	'server/main.lua'
 }
