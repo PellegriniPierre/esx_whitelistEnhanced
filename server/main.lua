@@ -206,7 +206,7 @@ end)
 RegisterServerEvent("esx_whitelistExtended:removePlayerToInConnect")
 AddEventHandler("esx_whitelistExtended:removePlayerToInConnect", function()
 	local _source = source
-	if _source ~= nil then
+	if(inConnection[_source] ~= nil) then
 		table.remove(inConnection, _source)
 	end
 end)
